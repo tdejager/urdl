@@ -12,7 +12,7 @@
 #define URDL_URL_HPP
 
 #include <string>
-#include <boost/system/error_code.hpp>
+#include <asio/error_code.hpp>
 #include "urdl/detail/config.hpp"
 
 #include "urdl/detail/abi_prefix.hpp"
@@ -213,7 +213,7 @@ public:
    * @returns A @c url object corresponding to the specified string.
    */
   URDL_DECL static url from_string(const char* s,
-      boost::system::error_code& ec);
+      asio::error_code& ec);
 
   /// Converts a string representation of a URL into an object of class @c url.
   /**
@@ -234,7 +234,7 @@ public:
    * @returns A @c url object corresponding to the specified string.
    */
   URDL_DECL static url from_string(const std::string& s,
-      boost::system::error_code& ec);
+      asio::error_code& ec);
 
   /// Compares two @c url objects for equality.
   friend URDL_DECL bool operator==(const url& a, const url& b);

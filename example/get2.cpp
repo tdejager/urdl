@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
       return 1;
     }
 
-    boost::asio::io_service io_service;
+    asio::io_service io_service;
 
     urdl::read_stream stream(io_service);
     stream.open(argv[1]);
@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
     for (;;)
     {
       char data[1024];
-      boost::system::error_code ec;
-      std::size_t length = stream.read_some(boost::asio::buffer(data), ec);
-      if (ec == boost::asio::error::eof)
+      asio::error_code ec;
+      std::size_t length = stream.read_some(asio::buffer(data), ec);
+      if (ec == asio::error::eof)
         break;
       if (ec)
         throw boost::system::system_error(ec);

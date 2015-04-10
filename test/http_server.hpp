@@ -27,11 +27,11 @@
 class http_server
 {
 public:
-  typedef boost::asio::ip::tcp tcp;
+  typedef asio::ip::tcp tcp;
 
   http_server()
     : acceptor_(io_service_, tcp::endpoint(
-          boost::asio::ip::address_v4::loopback(), 0)),
+          asio::ip::address_v4::loopback(), 0)),
       socket_(io_service_),
       response_delay_(0),
       content_delay_(0),
@@ -72,27 +72,27 @@ private:
       acceptor_.accept(socket_);
 
       // Wait for request.
-      boost::asio::streambuf buffer;
-      std::size_t size = boost::asio::read_until(socket_, buffer, "\r\n\r\n");
+      asio::streambuf buffer;
+      std::size_t size = asio::read_until(socket_, buffer, "\r\n\r\n");
       std::string request(size, 0);
       buffer.sgetn(&request[0], size);
       success_ = (request == expected_request_);
 
       // Introduce a delay before sending the response.
-      boost::asio::deadline_timer timer(io_service_);
+      asio::deadline_timer timer(io_service_);
       timer.expires_from_now(boost::posix_time::milliseconds(response_delay_));
       timer.wait();
 
       // Send response headers.
-      boost::system::error_code ec;
-      boost::asio::write(socket_, boost::asio::buffer(response_));
+      asio::error_code ec;
+      asio::write(socket_, asio::buffer(response_));
 
       // Introduce a delay before sending the content.
       timer.expires_from_now(boost::posix_time::milliseconds(content_delay_));
       timer.wait();
 
       // Now we can write the content.
-      boost::asio::write(socket_, boost::asio::buffer(content_));
+      asio::write(socket_, asio::buffer(content_));
 
       // We're done. Shut down the connection.
       socket_.shutdown(tcp::socket::shutdown_both, ec);
@@ -103,7 +103,7 @@ private:
     }
   }
 
-  boost::asio::io_service io_service_;
+  asio::io_service io_service_;
   tcp::acceptor acceptor_;
   tcp::socket socket_;
   std::string expected_request_;

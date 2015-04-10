@@ -92,7 +92,7 @@ std::string url::to_string(int components) const
   return s;
 }
 
-url url::from_string(const char* s, boost::system::error_code& ec)
+url url::from_string(const char* s, asio::error_code& ec)
 {
   url new_url;
 
@@ -211,13 +211,13 @@ url url::from_string(const char* s, boost::system::error_code& ec)
   if (*s == '#')
     new_url.fragment_.assign(++s);
 
-  ec = boost::system::error_code();
+  ec = asio::error_code();
   return new_url;
 }
 
 url url::from_string(const char* s)
 {
-  boost::system::error_code ec;
+  asio::error_code ec;
   url new_url(from_string(s, ec));
   if (ec)
   {
@@ -227,7 +227,7 @@ url url::from_string(const char* s)
   return new_url;
 }
 
-url url::from_string(const std::string& s, boost::system::error_code& ec)
+url url::from_string(const std::string& s, asio::error_code& ec)
 {
   return from_string(s.c_str(), ec);
 }

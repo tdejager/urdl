@@ -11,7 +11,7 @@
 #ifndef URDL_HTTP_IPP
 #define URDL_HTTP_IPP
 
-#include <boost/system/error_code.hpp>
+#include <asio/error_code.hpp>
 
 #include "urdl/detail/abi_prefix.hpp"
 
@@ -20,7 +20,7 @@ namespace http {
 namespace detail {
 
 class error_category_impl
-  : public boost::system::error_category
+  : public asio::error_category
 {
   virtual const char* name() const URDL_ERROR_CATEGORY_NOEXCEPT
   {
@@ -120,7 +120,7 @@ class error_category_impl
     }
   }
 
-  virtual boost::system::error_condition default_error_condition(
+  virtual asio::error_condition default_error_condition(
       int e) const URDL_ERROR_CATEGORY_NOEXCEPT
   {
     switch (e)
@@ -138,7 +138,7 @@ class error_category_impl
 
 } // namespace detail
 
-const boost::system::error_category& error_category()
+const asio::error_category& error_category()
 {
   static detail::error_category_impl instance;
   return instance;
@@ -146,7 +146,7 @@ const boost::system::error_category& error_category()
 
 namespace detail {
 
-static const boost::system::error_category& category_instance
+static const asio::error_category& category_instance
   = error_category();
 
 } // namespace detail

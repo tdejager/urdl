@@ -215,7 +215,7 @@ Not all URL protocols support a content type. For these protocols, this function
 Gets the last error associated with the stream. 
 
 
-  const boost::system::error_code & error() const;
+  const asio::error_code & error() const;
 
 
 
@@ -964,7 +964,7 @@ Not all URL protocols support a content type. For these protocols, this function
 Gets the last error associated with the stream. 
 
 
-  const boost::system::error_code & error() const;
+  const asio::error_code & error() const;
 
 
 
@@ -1191,7 +1191,7 @@ Sets the open timeout of the stream buffer.
 Gets the last error associated with the stream buffer. 
 
 
-  const boost::system::error_code & puberror() const;
+  const asio::error_code & puberror() const;
 
 
 
@@ -1724,7 +1724,7 @@ The class `read_stream` supports reading content from a specified URL using sync
   
 Currently supported URL protocols are `http`, `https` and `file`.
 
-The class `read_stream` meets the type requirements for `SyncReadStream` and `AsyncReadStream`, as defined in the Boost.Asio documentation. This allows objects of class `read_stream` to be used with the functions `boost::asio::read`, `boost::asio::async_read`, `boost::asio::read_until` and `boost::asio::async_read_until`.
+The class `read_stream` meets the type requirements for `SyncReadStream` and `AsyncReadStream`, as defined in the Boost.Asio documentation. This allows objects of class `read_stream` to be used with the functions `asio::read`, `asio::async_read`, `asio::read_until` and `asio::async_read_until`.
 
 
 ['[*Example]]
@@ -1733,15 +1733,15 @@ To synchronously open the URL, read the content and write it to standard output:
 
    try
    {
-     boost::asio::io_service io_service;
+     asio::io_service io_service;
      urdl::read_stream read_stream(io_service);
      read_stream.open("http://www.boost.org/LICENSE_1_0.txt");
      for (;;)
      {
        char data[1024];
-       boost::system::error_code ec;
-       std::size_t length = stream.read_some(boost::asio::buffer(data), ec);
-       if (ec == boost::asio::error::eof)
+       asio::error_code ec;
+       std::size_t length = stream.read_some(asio::buffer(data), ec);
+       if (ec == asio::error::eof)
          break;
        if (ec)
          throw boost::system::system_error(ec);
@@ -1758,26 +1758,26 @@ To synchronously open the URL, read the content and write it to standard output:
 
 To asynchronously open the URL, read the content and write it to standard output: 
 
-   boost::asio::io_service io_service;
+   asio::io_service io_service;
    urdl::read_stream read_stream(io_service)
    char data[1024];
    ...
    read_stream.async_open("http://www.boost.org/LICENSE_1_0.txt", open_handler);
    ...
-   void open_handler(const boost::system::error_code& ec)
+   void open_handler(const asio::error_code& ec)
    {
      if (!ec)
      {
-       read_stream.async_read_some(boost::asio::buffer(data), read_handler);
+       read_stream.async_read_some(asio::buffer(data), read_handler);
      }
    }
    ...
-   void read_handler(const boost::system::error_code& ec, std::size_t length)
+   void read_handler(const asio::error_code& ec, std::size_t length)
    {
      if (!ec)
      {
        std::cout.write(data, length);
-       read_stream.async_read_some(boost::asio::buffer(data), read_handler);
+       read_stream.async_read_some(asio::buffer(data), read_handler);
      }
    }
 
@@ -1817,10 +1817,10 @@ Asynchronously opens the specified URL.
 [[handler][The handler to be called when the open operation completes. Copies will be made of the handler as required. The function signature of the handler must be: 
 ``
    void handler(
-     const boost::system::error_code& ec // Result of operation.
+     const asio::error_code& ec // Result of operation.
    );
 ``
-Regardless of whether the asynchronous operation completes immediately or not, the handler will not be invoked from within this function. Invocation of the handler will be performed in a manner equivalent to using `boost::asio::io_service::post()`.]]
+Regardless of whether the asynchronous operation completes immediately or not, the handler will not be invoked from within this function. Invocation of the handler will be performed in a manner equivalent to using `asio::io_service::post()`.]]
 
 ]
 
@@ -1828,7 +1828,7 @@ Regardless of whether the asynchronous operation completes immediately or not, t
   
 
 
-   void open_handler(const boost::system::error_code& ec)
+   void open_handler(const asio::error_code& ec)
    {
      if (!ec)
      {
@@ -1873,11 +1873,11 @@ Asynchronously reads some data from the stream.
 [[handler][The handler to be called when the read operation completes. Copies will be made of the handler as required. The function signature of the handler must be: 
 ``
    void handler(
-     const boost::system::error_code& ec, // Result of operation.
+     const asio::error_code& ec, // Result of operation.
      std::size_t bytes_transferred        // Number of bytes read.
    );
 ``
-Regardless of whether the asynchronous operation completes immediately or not, the handler will not be invoked from within this function. Invocation of the handler will be performed in a manner equivalent to using `boost::asio::io_service::post()`.]]
+Regardless of whether the asynchronous operation completes immediately or not, the handler will not be invoked from within this function. Invocation of the handler will be performed in a manner equivalent to using `asio::io_service::post()`.]]
 
 ]
 
@@ -1885,17 +1885,17 @@ Regardless of whether the asynchronous operation completes immediately or not, t
   
 The asynchronous operation will continue until one or more bytes of data has been read successfully, or until an error occurs.
 
-The `async_read_some` operation may not read all of the requested number of bytes. Consider using the `boost::asio::async_read` function if you need to ensure that the requested amount of data is read before the asynchronous operation completes.
+The `async_read_some` operation may not read all of the requested number of bytes. Consider using the `asio::async_read` function if you need to ensure that the requested amount of data is read before the asynchronous operation completes.
 
 
 ['[*Example]]
   
-To read into a single data buffer use the `boost::asio::buffer` function as follows: 
+To read into a single data buffer use the `asio::buffer` function as follows: 
 
-   read_stream.async_read_some(boost::asio::buffer(data, size), handler);
+   read_stream.async_read_some(asio::buffer(data, size), handler);
 
 
-See the documentation for the `boost::asio::buffer` function for information on reading into multiple buffers in one go, and how to use it with arrays, `boost::array` or `std::vector`. 
+See the documentation for the `asio::buffer` function for information on reading into multiple buffers in one go, and how to use it with arrays, `boost::array` or `std::vector`. 
 
 
 
@@ -1911,8 +1911,8 @@ Closes the stream.
   void ``[link urdl.reference.core.read_stream.close.overload1 close]``();
   ``  [''''&raquo;''' [link urdl.reference.core.read_stream.close.overload1 more...]]``
 
-  boost::system::error_code ``[link urdl.reference.core.read_stream.close.overload2 close]``(
-      boost::system::error_code & ec);
+  asio::error_code ``[link urdl.reference.core.read_stream.close.overload2 close]``(
+      asio::error_code & ec);
   ``  [''''&raquo;''' [link urdl.reference.core.read_stream.close.overload2 more...]]``
 
 
@@ -1937,7 +1937,7 @@ Closes the stream.
 
 ['[*Remarks]]
   
-Any asynchronous open or read operations will be cancelled, and will complete with the `boost::asio::error::operation_aborted` error. 
+Any asynchronous open or read operations will be cancelled, and will complete with the `asio::error::operation_aborted` error. 
 
 
 
@@ -1951,8 +1951,8 @@ Any asynchronous open or read operations will be cancelled, and will complete wi
 Closes the stream. 
 
 
-  boost::system::error_code close(
-      boost::system::error_code & ec);
+  asio::error_code close(
+      asio::error_code & ec);
 
 
 
@@ -1971,7 +1971,7 @@ Closes the stream.
 
 ['[*Remarks]]
   
-Any asynchronous open or read operations will be cancelled, and will complete with the `boost::asio::error::operation_aborted` error. 
+Any asynchronous open or read operations will be cancelled, and will complete with the `asio::error::operation_aborted` error. 
 
 
 
@@ -2031,7 +2031,7 @@ Not all URL protocols support a content type. For these protocols, this function
 Gets the `io_service` associated with the stream. 
 
 
-  boost::asio::io_service & get_io_service();
+  asio::io_service & get_io_service();
 
 
 
@@ -2166,9 +2166,9 @@ Opens the specified URL.
       const url & u);
   ``  [''''&raquo;''' [link urdl.reference.core.read_stream.open.overload1 more...]]``
 
-  boost::system::error_code ``[link urdl.reference.core.read_stream.open.overload2 open]``(
+  asio::error_code ``[link urdl.reference.core.read_stream.open.overload2 open]``(
       const url & u,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
   ``  [''''&raquo;''' [link urdl.reference.core.read_stream.open.overload2 more...]]``
 
 
@@ -2211,7 +2211,7 @@ Opens the specified URL.
    {
      read_stream.open("http://www.boost.org");
    }
-   catch (boost::system::error_code& e)
+   catch (asio::error_code& e)
    {
      std::cerr << e.what() << std::endl;
    }
@@ -2231,9 +2231,9 @@ Opens the specified URL.
 Opens the specified URL. 
 
 
-  boost::system::error_code open(
+  asio::error_code open(
       const url & u,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
 
 
 
@@ -2258,7 +2258,7 @@ Opens the specified URL.
 
    urdl::read_stream read_stream(io_service);
 
-   boost::system::error_code ec;
+   asio::error_code ec;
    read_stream.open("http://www.boost.org", ec);
    if (ec)
    {
@@ -2291,7 +2291,7 @@ Reads some data from the stream.
       typename MutableBufferSequence>
   std::size_t ``[link urdl.reference.core.read_stream.read_some.overload2 read_some]``(
       const MutableBufferSequence & buffers,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
   ``  [''''&raquo;''' [link urdl.reference.core.read_stream.read_some.overload2 more...]]``
 
 
@@ -2326,7 +2326,7 @@ The number of bytes read.
 
 [variablelist
   
-[[boost::system::system_error][Thrown on failure. An error code of `boost::asio::error::eof` indicates that the end of the URL content has been reached.]]
+[[boost::system::system_error][Thrown on failure. An error code of `asio::error::eof` indicates that the end of the URL content has been reached.]]
 
 ]
 
@@ -2334,17 +2334,17 @@ The number of bytes read.
   
 The function call will block until one or more bytes of data has been read successfully, or until an error occurs.
 
-The `read_some` operation may not read all of the requested number of bytes. Consider using the `boost::asio::read` function if you need to ensure that the requested amount of data is read before the blocking operation completes.
+The `read_some` operation may not read all of the requested number of bytes. Consider using the `asio::read` function if you need to ensure that the requested amount of data is read before the blocking operation completes.
 
 
 ['[*Example]]
   
-To read into a single data buffer use the `boost::asio::buffer` function as follows: 
+To read into a single data buffer use the `asio::buffer` function as follows: 
 
-   read_stream.read_some(boost::asio::buffer(data, size));
+   read_stream.read_some(asio::buffer(data, size));
 
 
-See the documentation for the `boost::asio::buffer` function for information on reading into multiple buffers in one go, and how to use it with arrays, `boost::array` or `std::vector`. 
+See the documentation for the `asio::buffer` function for information on reading into multiple buffers in one go, and how to use it with arrays, `boost::array` or `std::vector`. 
 
 
 
@@ -2362,7 +2362,7 @@ Reads some data from the stream.
       typename MutableBufferSequence>
   std::size_t read_some(
       const MutableBufferSequence & buffers,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
 
 
 
@@ -2373,7 +2373,7 @@ Reads some data from the stream.
   
 [[buffers][One or more buffers into which the data will be read. The type must meet the requirements for `MutableBufferSequence`, as defined in the Boost.Asio documentation.]]
 
-[[ec][Set to indicate what error occurred, if any. An error code of `boost::asio::error::eof` indicates that the end of the URL content has been reached.]]
+[[ec][Set to indicate what error occurred, if any. An error code of `asio::error::eof` indicates that the end of the URL content has been reached.]]
 
 ]
 
@@ -2385,17 +2385,17 @@ The number of bytes read.
   
 This function is used to read data from the stream. The function call will block until one or more bytes of data has been read successfully, or until an error occurs.
 
-The `read_some` operation may not read all of the requested number of bytes. Consider using the `boost::asio::read` function if you need to ensure that the requested amount of data is read before the blocking operation completes.
+The `read_some` operation may not read all of the requested number of bytes. Consider using the `asio::read` function if you need to ensure that the requested amount of data is read before the blocking operation completes.
 
 
 ['[*Example]]
   
-To read into a single data buffer use the `boost::asio::buffer` function as follows: 
+To read into a single data buffer use the `asio::buffer` function as follows: 
 
-   read_stream.read_some(boost::asio::buffer(data, size));
+   read_stream.read_some(asio::buffer(data, size));
 
 
-See the documentation for the `boost::asio::buffer` function for information on reading into multiple buffers in one go, and how to use it with arrays, `boost::array` or `std::vector`. 
+See the documentation for the `asio::buffer` function for information on reading into multiple buffers in one go, and how to use it with arrays, `boost::array` or `std::vector`. 
 
 
 
@@ -2412,7 +2412,7 @@ Constructs an object of class `read_stream`.
 
 
   explicit read_stream(
-      boost::asio::io_service & io_service);
+      asio::io_service & io_service);
 
 
 
@@ -2739,7 +2739,7 @@ Converts a string representation of a URL into an object of class `url`.
 
   static url ``[link urdl.reference.core.url.from_string.overload2 from_string]``(
       const char * s,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
   ``  [''''&raquo;''' [link urdl.reference.core.url.from_string.overload2 more...]]``
 
   static url ``[link urdl.reference.core.url.from_string.overload3 from_string]``(
@@ -2748,7 +2748,7 @@ Converts a string representation of a URL into an object of class `url`.
 
   static url ``[link urdl.reference.core.url.from_string.overload4 from_string]``(
       const std::string & s,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
   ``  [''''&raquo;''' [link urdl.reference.core.url.from_string.overload4 more...]]``
 
 
@@ -2799,7 +2799,7 @@ Converts a string representation of a URL into an object of class `url`.
 
   static url from_string(
       const char * s,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
 
 
 
@@ -2871,7 +2871,7 @@ Converts a string representation of a URL into an object of class `url`.
 
   static url from_string(
       const std::string & s,
-      boost::system::error_code & ec);
+      asio::error_code & ec);
 
 
 
@@ -4465,7 +4465,7 @@ HTTP error codes.
 ]
 
 
-The enumerators of type `errc_t` are implicitly convertible to objects of type `boost::system::error_code`.
+The enumerators of type `errc_t` are implicitly convertible to objects of type `asio::error_code`.
 
 
 ['[*Requirements]]
@@ -4483,10 +4483,10 @@ The enumerators of type `errc_t` are implicitly convertible to objects of type `
 [section:http__errc__make_error_code http::errc::make_error_code]
 
 [indexterm1 http::errc::make_error_code] 
-Converts a value of type `errc_t` to a corresponding object of type `boost::system::error_code`. 
+Converts a value of type `errc_t` to a corresponding object of type `asio::error_code`. 
 
 
-  boost::system::error_code make_error_code(
+  asio::error_code make_error_code(
       errc_t e);
 
 

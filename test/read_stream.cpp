@@ -23,16 +23,16 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/read.hpp>
 
-void open_handler(const boost::system::error_code&) {}
-void read_handler(const boost::system::error_code&, std::size_t) {}
+void open_handler(const asio::error_code&) {}
+void read_handler(const asio::error_code&, std::size_t) {}
 
 // Ensure all functions compile correctly.
 void read_stream_compile_test()
 {
   try
   {
-    boost::asio::io_service io_service;
-    boost::system::error_code ec;
+    asio::io_service io_service;
+    asio::error_code ec;
     char buffer[1024];
 
     // Constructors
@@ -41,7 +41,7 @@ void read_stream_compile_test()
 
     // get_io_service()
 
-    want<boost::asio::io_service>(stream1.get_io_service());
+    want<asio::io_service>(stream1.get_io_service());
 
     // set_option()
 
@@ -70,8 +70,8 @@ void read_stream_compile_test()
 
     stream1.open("file://xyz");
     stream1.open(urdl::url("file://xyz"));
-    want<boost::system::error_code>(stream1.open("file://xyz", ec));
-    want<boost::system::error_code>(stream1.open(urdl::url("file://xyz"), ec));
+    want<asio::error_code>(stream1.open("file://xyz", ec));
+    want<asio::error_code>(stream1.open(urdl::url("file://xyz"), ec));
 
     // async_open()
 
@@ -81,7 +81,7 @@ void read_stream_compile_test()
     // close()
 
     stream1.close();
-    want<boost::system::error_code>(stream1.close(ec));
+    want<asio::error_code>(stream1.close(ec));
 
     // content_type()
 
@@ -97,12 +97,12 @@ void read_stream_compile_test()
 
     // read_some()
 
-    want<std::size_t>(stream1.read_some(boost::asio::buffer(buffer)));
-    want<std::size_t>(stream1.read_some(boost::asio::buffer(buffer), ec));
+    want<std::size_t>(stream1.read_some(asio::buffer(buffer)));
+    want<std::size_t>(stream1.read_some(asio::buffer(buffer), ec));
 
     // async_read_some()
 
-    stream1.async_read_some(boost::asio::buffer(buffer), read_handler);
+    stream1.async_read_some(asio::buffer(buffer), read_handler);
   }
   catch (std::exception&)
   {
@@ -128,13 +128,13 @@ void read_stream_synchronous_http_test()
 
   server.start(request, 0, response, 0, content);
 
-  boost::asio::io_service io_service;
+  asio::io_service io_service;
   urdl::read_stream stream1(io_service);
 
   stream1.open("http://localhost:" + port + "/");
 
   std::string returned_content(stream1.content_length(), 0);
-  boost::asio::read(stream1, boost::asio::buffer(
+  asio::read(stream1, asio::buffer(
         &returned_content[0], returned_content.size()));
 
   bool request_matched = server.stop();
@@ -164,10 +164,10 @@ void read_stream_synchronous_http_not_found_test()
 
   server.start(request, 0, response, 0, content);
 
-  boost::asio::io_service io_service;
+  asio::io_service io_service;
   urdl::read_stream stream1(io_service);
 
-  boost::system::error_code ec;
+  asio::error_code ec;
   stream1.open("http://localhost:" + port + "/", ec);
 
   bool request_matched = server.stop();
@@ -178,9 +178,9 @@ void read_stream_synchronous_http_not_found_test()
 
 struct handler
 {
-  boost::system::error_code& ec_;
+  asio::error_code& ec_;
   std::size_t& size_;
-  void operator()(const boost::system::error_code& ec, std::size_t size = 0)
+  void operator()(const asio::error_code& ec, std::size_t size = 0)
   {
     ec_ = ec;
     size_ = size;
@@ -206,10 +206,10 @@ void read_stream_asynchronous_http_test()
 
   server.start(request, 0, response, 0, content);
 
-  boost::asio::io_service io_service;
+  asio::io_service io_service;
   urdl::read_stream stream1(io_service);
 
-  boost::system::error_code ec;
+  asio::error_code ec;
   std::size_t bytes_transferred = 0;
   handler h = { ec, bytes_transferred };
 
@@ -218,7 +218,7 @@ void read_stream_asynchronous_http_test()
   BOOST_CHECK(!ec);
 
   std::string returned_content(stream1.content_length(), 0);
-  boost::asio::async_read(stream1, boost::asio::buffer(
+  asio::async_read(stream1, asio::buffer(
         &returned_content[0], returned_content.size()), h);
   io_service.reset();
   io_service.run();
@@ -252,10 +252,10 @@ void read_stream_asynchronous_http_not_found_test()
 
   server.start(request, 0, response, 0, content);
 
-  boost::asio::io_service io_service;
+  asio::io_service io_service;
   urdl::read_stream stream1(io_service);
 
-  boost::system::error_code ec;
+  asio::error_code ec;
   std::size_t bytes_transferred = 0;
   handler h = { ec, bytes_transferred };
 

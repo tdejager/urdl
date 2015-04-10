@@ -22,10 +22,10 @@
 [template indexterm2[term1 term2] '''<indexterm><primary>'''[term1]'''</primary><secondary>'''[term2]'''</secondary></indexterm>''']
 [def SyncReadStream [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/SyncReadStream.html SyncReadStream]]
 [def AsyncReadStream [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/AsyncReadStream.html AsyncReadStream]]
-[def boost::asio::read [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read.html boost::asio::read]]
-[def boost::asio::read_until [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read_until.html boost::asio::read_until]]
-[def boost::asio::async_read [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read.html boost::asio::async_read]]
-[def boost::asio::async_read_until [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read_until.html boost::asio::async_read_until]]
+[def asio::read [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read.html asio::read]]
+[def asio::read_until [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/read_until.html asio::read_until]]
+[def asio::async_read [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read.html asio::async_read]]
+[def asio::async_read_until [@http://www.boost.org/doc/libs/1_39_0/doc/html/boost_asio/reference/async_read_until.html asio::async_read_until]]
 
 [/=============================================================================]
 
@@ -453,7 +453,7 @@ the option of choosing a throwing overload:
 
 or an overload that does not throw an exception on failure:
 
-  boost::system::error_code ec;
+  asio::error_code ec;
   urdl::url url = urdl::url::from_string("http://somehost/path", ec);
 
 [endsect]
@@ -470,7 +470,7 @@ To synchronously open a URL, we may use:
 
   ...
 
-  boost::asio::io_service io_service;
+  asio::io_service io_service;
 
   ...
 
@@ -483,12 +483,12 @@ To synchronously open a URL, we may use:
   ...
 
   // Alternatively, open the URL synchronously without throwing on error.
-  boost::system::error_code ec;
+  asio::error_code ec;
   stream.open("http://somehost/path", ec);
 
 To asynchronously open a URL, we can write:
 
-  void open_handler(const boost::system::error_code& ec)
+  void open_handler(const asio::error_code& ec)
   {
     if (ec)
     {
@@ -511,21 +511,21 @@ operation completes.
 
 The [link urdl.reference.core.read_stream urdl::read_stream] class meets
 Boost.Asio's SyncReadStream and AsyncReadStream type requirements. This means
-we can use it with the synchronous functions boost::asio::read and
-boost::asio::read_until:
+we can use it with the synchronous functions asio::read and
+asio::read_until:
 
   boost::array<char, 512> data;
-  boost::asio::read(stream, boost::asio::buffer(data));
+  asio::read(stream, asio::buffer(data));
 
   ...
 
-  boost::asio::streambuf buffer;
-  boost::asio::read_until(stream, buffer, "\r\n");
+  asio::streambuf buffer;
+  asio::read_until(stream, buffer, "\r\n");
 
-or with the asynchronous functions boost::asio::async_read and
-boost::asio::async_read_until:
+or with the asynchronous functions asio::async_read and
+asio::async_read_until:
 
-  void read_handler(const boost::system::error_code& ec, std::size_t length)
+  void read_handler(const asio::error_code& ec, std::size_t length)
   {
     ...
   }
@@ -533,12 +533,12 @@ boost::asio::async_read_until:
   ...
 
   boost::array<char, 512> data;
-  boost::asio::async_read(stream, boost::asio::buffer(data), read_handler);
+  asio::async_read(stream, asio::buffer(data), read_handler);
 
   ...
 
-  boost::asio::streambuf buffer;
-  boost::asio::async_read_until(stream, buffer, "\r\n", read_handler);
+  asio::streambuf buffer;
+  asio::async_read_until(stream, buffer, "\r\n", read_handler);
 
 The asynchronous functions on the [link urdl.reference.core.read_stream
 urdl::read_stream] class allow concurrent access to multiple URLs without

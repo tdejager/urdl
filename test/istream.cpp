@@ -72,7 +72,7 @@ void istream_compile_test()
 
   // error()
 
-  want<boost::system::error_code>(const_istream1.error());
+  want<asio::error_code>(const_istream1.error());
 
   // read_timeout()
 

@@ -20,7 +20,7 @@ class downloader
   : public boost::enable_shared_from_this<downloader>
 {
 public:
-  downloader(boost::asio::io_service& io_service)
+  downloader(asio::io_service& io_service)
     : read_stream_(io_service)
   {
   }
@@ -34,25 +34,25 @@ public:
   }
 
 private:
-  void handle_open(const boost::system::error_code& ec)
+  void handle_open(const asio::error_code& ec)
   {
     if (!ec)
     {
       ofstream_.open(file_.c_str(), std::ios_base::out | std::ios_base::binary);
       read_stream_.async_read_some(
-          boost::asio::buffer(buffer_),
+          asio::buffer(buffer_),
           boost::bind(&downloader::handle_read,
             shared_from_this(), _1, _2));
     }
   }
 
-  void handle_read(const boost::system::error_code& ec, std::size_t length)
+  void handle_read(const asio::error_code& ec, std::size_t length)
   {
     if (!ec)
     {
       ofstream_.write(buffer_, length);
       read_stream_.async_read_some(
-          boost::asio::buffer(buffer_),
+          asio::buffer(buffer_),
           boost::bind(&downloader::handle_read,
             shared_from_this(), _1, _2));
     }
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
       return 1;
     }
 
-    boost::asio::io_service io_service;
+    asio::io_service io_service;
 
     for (int i = 1; i < argc; i += 2)
     {

@@ -10,7 +10,7 @@
 
 // No include guard.
 
-#include <boost/config/abi_prefix.hpp>
+//#include <boost/config/abi_prefix.hpp>
 
 // Disable some pesky MSVC warnings.
 #if defined(_MSC_VER)
