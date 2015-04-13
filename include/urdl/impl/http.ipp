@@ -120,18 +120,18 @@ class error_category_impl
     }
   }
 
-  virtual asio::error_condition default_error_condition(
+  virtual std::error_condition default_error_condition(
       int e) const URDL_ERROR_CATEGORY_NOEXCEPT
   {
     switch (e)
     {
     case http::errc::unauthorized:
     case http::errc::forbidden:
-      return boost::system::errc::permission_denied;
+      return std::errc::permission_denied;
     case http::errc::not_found:
-      return boost::system::errc::no_such_file_or_directory;
+      return std::errc::no_such_file_or_directory;
     default:
-      return boost::system::error_condition(e, *this);
+      return std::error_condition(e, *this);
     }
   }
 };

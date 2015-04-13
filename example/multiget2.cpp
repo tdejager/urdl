@@ -9,10 +9,9 @@
 //
 
 #include <urdl/read_stream.hpp>
-#include <boost/asio/spawn.hpp>
-#include <boost/bind.hpp>
-#include <boost/ref.hpp>
+#include <asio/spawn.hpp>
 #include <iostream>
+#include <functional>
 #include <fstream>
 #include <string>
 
@@ -61,7 +60,7 @@ int main(int argc, char* argv[])
     for (int i = 1; i < argc; i += 2)
     {
       asio::spawn(io_service,
-          boost::bind(download, boost::ref(io_service),
+          std::bind(download, std::ref(io_service),
             urdl::url(argv[i]), std::string(argv[i + 1]), _1));
     }
 

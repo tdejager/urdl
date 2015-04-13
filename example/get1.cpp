@@ -9,7 +9,6 @@
 //
 
 #include <urdl/istream.hpp>
-#include <boost/progress.hpp>
 #include <iostream>
 #include <fstream>
 
@@ -33,13 +32,11 @@ int main(int argc, char* argv[])
     std::ofstream os(argv[2], std::ios_base::out | std::ios_base::binary);
     if (is.content_length() != std::numeric_limits<std::size_t>::max())
     {
-      boost::progress_display progress(is.content_length());
       while (is && os)
       {
         char buffer[1024] = "";
         is.read(buffer, sizeof(buffer));
         os.write(buffer, is.gcount());
-        progress += is.gcount();
       }
       std::cout << std::endl;
     }

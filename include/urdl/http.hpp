@@ -573,16 +573,10 @@ inline asio::error_code make_error_code(errc_t e)
 }; // namespace http
 } // namespace urdl
 
-namespace asio {
-  
-template<typename T>
-struct is_error_code
-  {
-    static const bool value = false;
-  };
+namespace std {
   
 template<>
-struct is_error_code<urdl::http::errc::errc_t>
+struct is_error_code_enum<urdl::http::errc::errc_t>
 {
   static const bool value = true;
 };

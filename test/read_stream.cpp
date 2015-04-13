@@ -19,9 +19,9 @@
 #include "unit_test.hpp"
 #include "urdl/option_set.hpp"
 #include "http_server.hpp"
-#include <boost/asio/buffer.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/read.hpp>
+#include <asio/buffer.hpp>
+#include <asio/io_service.hpp>
+#include <asio/read.hpp>
 
 void open_handler(const asio::error_code&) {}
 void read_handler(const asio::error_code&, std::size_t) {}
@@ -139,10 +139,10 @@ void read_stream_synchronous_http_test()
 
   bool request_matched = server.stop();
 
-  BOOST_CHECK(request_matched);
-  BOOST_CHECK(stream1.content_type() == "text/plain");
-  BOOST_CHECK(stream1.content_length() == 13);
-  BOOST_CHECK(returned_content == content);
+  assert(request_matched);
+  assert(stream1.content_type() == "text/plain");
+  assert(stream1.content_length() == 13);
+  assert(returned_content == content);
 }
 
 // Test synchronous HTTP with an error status returned by the server.

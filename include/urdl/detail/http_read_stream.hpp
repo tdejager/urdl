@@ -136,7 +136,7 @@ public:
             std::istreambuf_iterator<char>(),
             version_major, version_minor, status_code))
       {
-        ec = http::errc::malformed_status_line;
+        ec = http::errc::make_error_code(http::errc::malformed_status_line);
         return ec;
       }
 
@@ -159,7 +159,7 @@ public:
     if (!parse_http_headers(headers_.begin(), headers_.end(),
           content_type_, content_length_, location_))
     {
-      ec = http::errc::malformed_response_headers;
+      ec = http::errc::make_error_code(http::errc::malformed_response_headers);
       return ec;
     }
 
@@ -297,7 +297,7 @@ public:
                 std::istreambuf_iterator<char>(),
                 version_major, version_minor, status_code_))
           {
-            ec = http::errc::malformed_status_line;
+            ec = http::errc::make_error_code(http::errc::malformed_status_line);
             handler_(ec);
             return;
           }
@@ -325,7 +325,7 @@ public:
       if (!parse_http_headers(headers_.begin(), headers_.end(),
             content_type_, content_length_, location_))
       {
-        ec = http::errc::malformed_response_headers;
+        ec = http::errc::make_error_code(http::errc::malformed_response_headers);
         handler_(ec);
         return;
       }

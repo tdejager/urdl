@@ -12,7 +12,7 @@
 #define URDL_ISTREAM_HPP
 
 #include <istream>
-#include <boost/utility/base_from_member.hpp>
+//#include <boost/utility/base_from_member.hpp>
 #include <asio/error_code.hpp>
 #include "urdl/istreambuf.hpp"
 
@@ -45,8 +45,22 @@ namespace urdl {
  * @e Header: @c <urdl/istream.hpp> @n
  * @e Namespace: @c urdl
  */
+  
+  template <typename MemberType, int UniqueID = 0 >
+  class base_from_member
+  {
+  protected:
+    // The member type to construct
+    MemberType member;
+    
+    base_from_member() : member(){ }
+    
+    base_from_member(MemberType x1) : member(x1) {}
+    
+  };  // modified from boost::base_from_member
+  
 class istream
-  : private boost::base_from_member<istreambuf>,
+  : private urdl::base_from_member<istreambuf>,
     public std::basic_istream<char>
 {
 public:
@@ -58,7 +72,7 @@ public:
    */
   istream()
     : std::basic_istream<char>(
-        &this->boost::base_from_member<istreambuf>::member)
+        &this->urdl::base_from_member<istreambuf>::member)
   {
   }
 
@@ -74,7 +88,7 @@ public:
    */
   explicit istream(const url& u)
     : std::basic_istream<char>(
-        &this->boost::base_from_member<istreambuf>::member)
+        &this->urdl::base_from_member<istreambuf>::member)
   {
     if (rdbuf()->open(u) == 0)
       setstate(std::ios_base::failbit);
@@ -102,7 +116,7 @@ public:
    */
   explicit istream(const url& u, const option_set& options)
     : std::basic_istream<char>(
-        &this->boost::base_from_member<istreambuf>::member)
+        &this->urdl::base_from_member<istreambuf>::member)
   {
     rdbuf()->set_options(options);
     if (rdbuf()->open(u) == 0)
@@ -245,7 +259,7 @@ public:
   istreambuf* rdbuf() const
   {
     return const_cast<istreambuf*>(
-        &this->boost::base_from_member<istreambuf>::member);
+        &this->urdl::base_from_member<istreambuf>::member);
   }
 
   /// Gets the last error associated with the stream.

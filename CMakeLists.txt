@@ -3,7 +3,9 @@ project(URDL C CXX)
 cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
 option(URDL_HEADER_ONLY "Use library as header only" OFF)
-option(COMPILE_TESTS "Compile the tests" OFF)
+option(COMPILE_TESTS    "Compile the tests" OFF)
+option(BUILD_EXAMPLES   "Built the examples" OFF)
+option(USE_SSL          "Make use of SSL" OFF)
 
 add_definitions(-DASIO_STANDALONE)
 
@@ -34,7 +36,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
-
+# FIND ASIO Libary
 FIND_PATH(ASIO_INCLUDE_DIR
   NAMES
     asio.hpp
@@ -54,6 +56,17 @@ else()
     add_library(urdl_lib ${URDL_source})
 endif()
 
+if(USE_SSL)
+  # Find OpenSSL Library
+  find_package(OpenSSL REQUIRED)
+  include_directories(
+    ${OpenSSL_INCLUDE_DIR})
+  target_link_libraries(urdl_lib ${OPENSSL_LIBRARIES})
+
+else()
+  add_definitions(-DURDL_DISABLE_SSL)
+endif()
+
 
 if(COMPILE_TESTS)
     set(test_include "test/http_server.hpp")
@@ -62,12 +75,28 @@ if(COMPILE_TESTS)
     add_executable(option_set_test ${test_include} "test/option_set.cpp")
     add_executable(read_stream     ${test_include} "test/read_stream.cpp")
     add_executable(url             ${test_include} "test/url.cpp")
-    if(not URDL_HEADER_ONLY)
+    if(NOT URDL_HEADER_ONLY)
         target_link_libraries(istream_test ${urdl_lib})
         target_link_libraries(istreambuf_test ${urdl_lib})
         target_link_libraries(option_set_test ${urdl_lib})
         target_link_libraries(read_stream ${urdl_lib})
         target_link_libraries(url ${urdl_lib})
     endif()
-
 endif()
+
+if(BUILD_EXAMPLES)
+    add_executable(get1       "example/get1.cpp")
+    add_executable(get2       "example/get2.cpp")
+    add_executable(multiget1  "example/multiget1.cpp")
+    add_executable(multiget2  "example/multiget2.cpp")
+    if(NOT URDL_HEADER_ONLY)
+        target_link_libraries(get1 urdl_lib)
+        target_link_libraries(get2 urdl_lib)
+        target_link_libraries(multiget1 urdl_lib)
+        target_link_libraries(multiget2 urdl_lib)
+    endif()
+endif()
+
+
+
+

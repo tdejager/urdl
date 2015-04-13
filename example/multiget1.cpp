@@ -9,15 +9,13 @@
 //
 
 #include <urdl/read_stream.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <functional>
 
 class downloader
-  : public boost::enable_shared_from_this<downloader>
+: public std::enable_shared_from_this<downloader>
 {
 public:
   downloader(asio::io_service& io_service)
@@ -29,7 +27,7 @@ public:
   {
     file_ = file;
     read_stream_.async_open(url,
-        boost::bind(&downloader::handle_open,
+        std::bind(&downloader::handle_open,
           shared_from_this(), _1));
   }
 
@@ -41,7 +39,7 @@ private:
       ofstream_.open(file_.c_str(), std::ios_base::out | std::ios_base::binary);
       read_stream_.async_read_some(
           asio::buffer(buffer_),
-          boost::bind(&downloader::handle_read,
+          std::bind(&downloader::handle_read,
             shared_from_this(), _1, _2));
     }
   }
@@ -53,7 +51,7 @@ private:
       ofstream_.write(buffer_, length);
       read_stream_.async_read_some(
           asio::buffer(buffer_),
-          boost::bind(&downloader::handle_read,
+          std::bind(&downloader::handle_read,
             shared_from_this(), _1, _2));
     }
   }
@@ -79,7 +77,7 @@ int main(int argc, char* argv[])
 
     for (int i = 1; i < argc; i += 2)
     {
-      boost::shared_ptr<downloader> d(new downloader(io_service));
+      std::shared_ptr<downloader> d(new downloader(io_service));
       d->start(argv[i], argv[i + 1]);
     }
 

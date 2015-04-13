@@ -259,8 +259,8 @@ public:
     asio::error_code ec;
     if (open(u, ec))
     {
-      boost::system::system_error ex(ec);
-      boost::throw_exception(ex);
+      std::system_error ex(ec);
+      asio::detail::throw_exception(ex);
     }
   }
 
@@ -286,6 +286,7 @@ public:
    */
  asio::error_code open(const url& u, asio::error_code& ec)
   {
+    //using make_error_code = http_make_error_code;
     url tmp_url = u;
     std::size_t redirects = 0;
     for (;;)
@@ -373,8 +374,8 @@ public:
    * @endcode
    */
   template <typename Handler>
-  URDL_INITFN_RESULT_TYPE(Handler,
-      void (asio::error_code))
+  ASIO_INITFN_RESULT_TYPE(Handler,
+                         void (asio::error_code))
   async_open(const url& u, Handler handler)
   {
 #if (BOOST_VERSION >= 105400)
@@ -410,7 +411,7 @@ public:
     {
       asio::system_error ex(ec);
       // Todo replace this with something?
-     // boost::throw_exception(ex);
+      asio::detail::throw_exception(ex);
     }
   }
 
@@ -655,7 +656,7 @@ public:
    * with arrays, @c boost::array or @c std::vector.
    */
   template <typename MutableBufferSequence, typename Handler>
-  URDL_INITFN_RESULT_TYPE(Handler,
+  ASIO_INITFN_RESULT_TYPE(Handler,
       void (asio::error_code, std::size_t))
   async_read_some(const MutableBufferSequence& buffers, Handler handler)
   {

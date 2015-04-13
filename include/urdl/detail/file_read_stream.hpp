@@ -46,7 +46,7 @@ public:
     file_.open(path.c_str(), std::ios_base::in | std::ios_base::binary);
     if (!file_)
     {
-      ec = make_error_code(boost::system::errc::no_such_file_or_directory);
+      ec = make_error_code(std::errc::no_such_file_or_directory);
       return ec;
     }
     ec = asio::error_code();

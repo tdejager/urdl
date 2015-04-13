@@ -14,8 +14,8 @@
 #include <cstring>
 #include <cctype>
 #include <cstdlib>
-#include <boost/system/system_error.hpp>
-#include <boost/throw_exception.hpp>
+//#include <boost/system/system_error.hpp>
+//#include <boost/throw_exception.hpp>
 
 #include "urdl/detail/abi_prefix.hpp"
 
@@ -106,17 +106,17 @@ url url::from_string(const char* s, asio::error_code& ec)
   // "://".
   if (*s++ != ':')
   {
-    ec = make_error_code(boost::system::errc::invalid_argument);
+    ec = make_error_code(std::errc::invalid_argument);
     return url();
   }
   if (*s++ != '/')
   {
-    ec = make_error_code(boost::system::errc::invalid_argument);
+    ec = make_error_code(std::errc::invalid_argument);
     return url();
   }
   if (*s++ != '/')
   {
-    ec = make_error_code(boost::system::errc::invalid_argument);
+    ec = make_error_code(std::errc::invalid_argument);
     return url();
   }
 
@@ -143,7 +143,7 @@ url url::from_string(const char* s, asio::error_code& ec)
     length = std::strcspn(++s, "]");
     if (s[length] != ']')
     {
-      ec = make_error_code(boost::system::errc::invalid_argument);
+      ec = make_error_code(std::errc::invalid_argument);
       return url();
     }
     new_url.host_.assign(s, s + length);
@@ -151,7 +151,7 @@ url url::from_string(const char* s, asio::error_code& ec)
     s += length + 1;
     if (std::strcspn(s, ":/?#") != 0)
     {
-      ec = make_error_code(boost::system::errc::invalid_argument);
+      ec = make_error_code(std::errc::invalid_argument);
       return url();
     }
   }
@@ -168,7 +168,7 @@ url url::from_string(const char* s, asio::error_code& ec)
     length = std::strcspn(++s, "/?#");
     if (length == 0)
     {
-      ec = make_error_code(boost::system::errc::invalid_argument);
+      ec = make_error_code(std::errc::invalid_argument);
       return url();
     }
     new_url.port_.assign(s, s + length);
@@ -176,7 +176,7 @@ url url::from_string(const char* s, asio::error_code& ec)
     {
       if (!std::isdigit(new_url.port_[i]))
       {
-        ec = make_error_code(boost::system::errc::invalid_argument);
+        ec = make_error_code(std::errc::invalid_argument);
         return url();
       }
     }
@@ -191,7 +191,7 @@ url url::from_string(const char* s, asio::error_code& ec)
     std::string tmp_path;
     if (!unescape_path(new_url.path_, tmp_path))
     {
-      ec = make_error_code(boost::system::errc::invalid_argument);
+ec = make_error_code(std::errc::invalid_argument);
       return url();
     }
     s += length;
@@ -221,8 +221,8 @@ url url::from_string(const char* s)
   url new_url(from_string(s, ec));
   if (ec)
   {
-    boost::system::system_error ex(ec);
-    boost::throw_exception(ex);
+    std::system_error ex(ec);
+    asio::detail::throw_exception(ex);
   }
   return new_url;
 }

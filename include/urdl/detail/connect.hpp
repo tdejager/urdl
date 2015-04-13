@@ -11,7 +11,7 @@
 #ifndef URDL_DETAIL_CONNECT_HPP
 #define URDL_DETAIL_CONNECT_HPP
 
-#include <boost/asio/ip/tcp.hpp>
+#include <asio/ip/tcp.hpp>
 #include <sstream>
 #include "urdl/detail/coroutine.hpp"
 

@@ -9,9 +9,9 @@
 //
 
 #include <urdl/read_stream.hpp>
-#include <boost/progress.hpp>
 #include <iostream>
 #include <fstream>
+
 
 int main(int argc, char* argv[])
 {
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
       if (ec == asio::error::eof)
         break;
       if (ec)
-        throw boost::system::system_error(ec);
+        throw std::system_error(ec);
       os.write(data, length);
     }
   }

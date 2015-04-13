@@ -42,7 +42,11 @@
 # if (BOOST_VERSION >= 105300)
 #  define URDL_ERROR_CATEGORY_NOEXCEPT BOOST_NOEXCEPT
 # else // (BOOOST_VERSION >= 105300)
-#  define URDL_ERROR_CATEGORY_NOEXCEPT
+  # ifndef _MSC_VER
+    #  define URDL_ERROR_CATEGORY_NOEXCEPT noexcept
+  # else 
+    #  define URDL_ERROR_CATEGORY_NOEXCEPT
+  # endif
 # endif // (BOOOST_VERSION >= 105300)
 #endif // !defined(URDL_ERROR_CATEGORY_NOEXCEPT)
 

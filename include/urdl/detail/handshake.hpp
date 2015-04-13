@@ -13,13 +13,13 @@
 
 #include <cstring>
 #include <cctype>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/ip/address.hpp>
-#include <boost/asio/detail/bind_handler.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/ip/address.hpp>
+#include <asio/detail/bind_handler.hpp>
 #include "urdl/detail/coroutine.hpp"
 
 #if !defined(URDL_DISABLE_SSL)
-# include <boost/asio/ssl.hpp>
+# include <asio/ssl.hpp>
 # include <openssl/x509v3.h>
 #endif // !defined(URDL_DISABLE_SSL)
 
@@ -174,14 +174,14 @@ inline asio::error_code handshake(
       if (certificate_matches_host(cert, host))
         ec = asio::error_code();
       else
-        ec = make_error_code(boost::system::errc::permission_denied);
+        ec = make_error_code(std::errc::permission_denied);
     }
     else
-      ec = make_error_code(boost::system::errc::permission_denied);
+      ec = make_error_code(std::errc::permission_denied);
     X509_free(cert);
   }
   else
-    ec = make_error_code(boost::system::errc::permission_denied);
+    ec = make_error_code(std::errc::permission_denied);
 
   return ec;
 }
@@ -220,14 +220,14 @@ public:
         if (certificate_matches_host(cert, host_))
           ec = asio::error_code();
         else
-          ec = make_error_code(boost::system::errc::permission_denied);
+          ec = std::make_error_code(std::errc::permission_denied);
       }
       else
-        ec = make_error_code(boost::system::errc::permission_denied);
+        ec = make_error_code(std::errc::permission_denied);
       X509_free(cert);
     }
     else
-      ec = make_error_code(boost::system::errc::permission_denied);
+      ec = make_error_code(std::errc::permission_denied);
 
     handler_(ec);
 
