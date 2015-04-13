@@ -3,9 +3,9 @@ project(URDL C CXX)
 cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
 option(URDL_HEADER_ONLY "Use library as header only" OFF)
-option(COMPILE_TESTS    "Compile the tests" OFF)
-option(BUILD_EXAMPLES   "Built the examples" OFF)
-option(USE_SSL          "Make use of SSL" OFF)
+option(URDL_COMPILE_TESTS    "Compile the tests" OFF)
+option(URDL_BUILD_EXAMPLES   "Built the examples" OFF)
+option(URDL_USE_SSL          "Make use of SSL" OFF)
 
 add_definitions(-DASIO_STANDALONE)
 
