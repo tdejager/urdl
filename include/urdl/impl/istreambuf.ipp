@@ -220,9 +220,15 @@ std::streambuf::int_type istreambuf::underflow()
       asio::detail::throw_exception(std::system_error(body_->error_));
     }
 
-    setg(body_->get_buffer_.begin(),
-        body_->get_buffer_.begin() + body::putback_max,
-        body_->get_buffer_.begin() + body::putback_max + bytes_transferred);
+#ifdef _MSC_VER
+  setg(&body_->get_buffer_.at(0),
+      &body_->get_buffer_.at(body::putback_max),
+      &body_->get_buffer_.at(body::putback_max));
+#else
+  setg(body_->get_buffer_.begin(),
+      body_->get_buffer_.begin() + body::putback_max,
+      body_->get_buffer_.begin() + body::putback_max);
+#endif
     return traits_type::to_int_type(*gptr());
   }
   else
@@ -238,9 +244,15 @@ const asio::error_code& istreambuf::error() const
 
 void istreambuf::init_buffers()
 {
+#ifdef _MSC_VER
+  setg(&body_->get_buffer_.at(0),
+      &body_->get_buffer_.at(body::putback_max),
+      &body_->get_buffer_.at(body::putback_max));
+#else
   setg(body_->get_buffer_.begin(),
       body_->get_buffer_.begin() + body::putback_max,
       body_->get_buffer_.begin() + body::putback_max);
+#endif
 }
 
 } // namespace urdl
