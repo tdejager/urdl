@@ -42,9 +42,9 @@
 # if (BOOST_VERSION >= 105300)
 #  define URDL_ERROR_CATEGORY_NOEXCEPT BOOST_NOEXCEPT
 # else // (BOOOST_VERSION >= 105300)
-  # ifndef _MSC_VER
+  # if !defined(_MSC_VER) || _MSC_VER >= 1900
     #  define URDL_ERROR_CATEGORY_NOEXCEPT noexcept
-  # else 
+  # else
     #  define URDL_ERROR_CATEGORY_NOEXCEPT
   # endif
 # endif // (BOOOST_VERSION >= 105300)
@@ -57,7 +57,7 @@
 # define URDL_INITFN_RESULT_TYPE(h, sig) void
 #endif // (BOOST_VERSION >= 105400)
 */
- 
+
 // Enable library autolinking for MSVC.
 
 #if !defined(BOOST_ALL_NO_LIB) && !defined(URDL_NO_LIB) \
