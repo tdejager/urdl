@@ -1,6 +1,6 @@
 project(URDL C CXX)
 
-cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
 
 option(URDL_HEADER_ONLY "Use library as header only" OFF)
 option(URDL_COMPILE_TESTS    "Compile the tests" OFF)
